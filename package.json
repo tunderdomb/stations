@@ -1,0 +1,19 @@
+{
+  "name": "stations",
+  "version": "0.1.0",
+  "description": "Pub/sub event bus",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "pub/sub",
+    "radio",
+    "channels",
+    "events",
+    "event",
+    "bus"
+  ],
+  "author": "tunderdomb",
+  "license": "MIT"
+}
