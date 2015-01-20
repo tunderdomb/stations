@@ -24,7 +24,8 @@ Radio.prototype.publish = function( channel, content ){
 }
 Radio.prototype.subscribe = function( channel, listener ){
   channel = this.createChannel(this, channel)
-  return channel.subscribe(listener)
+  channel.subscribe(listener)
+  return this
 }
 Radio.prototype.unsubscribe = function( channel, listener ){
   if( this.channelExists(channel) ) {
