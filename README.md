@@ -15,9 +15,14 @@ If a message is cancelled, no other listeners will reach it.
 ```js
 var stations = require("stations")
 
+// the module exports a function that returns a Radio instance
+radio = stations("")
+
+// constructors are exposed for inheritance
 var radio = new stations.Radio("")
 var channel = new stations.Channel("")
 var message = new stations.Message({})
+
 ```
 
 ## Radio
@@ -28,9 +33,7 @@ var radio = stations("name")
 
 #### name
 
-**type** `String`
-
-The radio's name (optional)
+**type** `String` The radio's name (optional)
 
 ```js
 radio.name
@@ -53,7 +56,7 @@ radio.channelExists("")
 `channel` the channel name
 
 ```js
-radio.createChannel("")
+var channel = radio.createChannel("")
 ```
 
 #### deleteChannel( *String* `channel` )
@@ -76,7 +79,7 @@ radio.deleteChannel("")
 `content` any content
 
 ```js
-radio.publish("", {})
+var message = radio.publish("", {})
 ```
 
 #### subscribe( String channel, Function listener )
@@ -85,7 +88,8 @@ radio.publish("", {})
 
 `channel` the channel to subscribe
 
-`listener` the callback to call on messages
+`listener` the callback to call on messages.
+           Listeners receive a `Message` object as the only argument
 
 ```js
 radio.subscribe("", function listener( message ){
@@ -147,6 +151,12 @@ provider(...)
 var channel = radio.createChannel("")
 ```
 
+Channels are array instances and you can use array methods on them.
+
+```js
+channel instanceOf Array === true
+```
+
 #### publish( Object content )
 
 **return** `Message` the message passed to listeners
@@ -161,7 +171,8 @@ channel.publish({})
 
 **return** `Channel` the Channel instance this method was called on (`this`)
 
-`listener` the callback to call on messages
+`listener` the callback to call on messages.
+           Listeners receive a `Message` object as the only argument
 
 ```js
 channel.subscribe(function( message ){
@@ -180,6 +191,16 @@ channel.unsubscribe(listener)
 ```
 
 ## Message
+
+Messages are passed to listeners and wrap the data they carry.
+
+#### content
+
+**type** `any` the content passed to `publish(...)`
+
+```js
+message.content
+```
 
 #### cancelled
 
