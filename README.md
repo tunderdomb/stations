@@ -14,6 +14,10 @@ If a message is cancelled, no other listeners will reach it.
 
 ```js
 var stations = require("stations")
+
+var radio = new stations.Radio("")
+var channel = new stations.Channel("")
+var message = new stations.Message({})
 ```
 
 ## Radio
@@ -176,6 +180,14 @@ channel.unsubscribe(listener)
 ```
 
 ## Message
+
+#### cancelled
+
+**type** `boolean` true if the message was cancelled
+
+```js
+message.cancelled
+```
 
 #### cancel(  )
 
