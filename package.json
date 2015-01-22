@@ -1,6 +1,6 @@
 {
   "name": "stations",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Pub/sub event bus",
   "main": "index.js",
   "scripts": {

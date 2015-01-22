@@ -4,8 +4,12 @@ module.exports = Radio
 
 function Radio( name ){
   this.name = name || "radio"
-  this._channels = {}
-  this._providers = {}
+  Object.defineProperty(this, "_channels", {
+    value: {}
+  })
+  Object.defineProperty(this, "_providers", {
+    value: {}
+  })
 }
 
 Radio.prototype.channelExists = function( channel ){
@@ -30,6 +34,12 @@ Radio.prototype.subscribe = function( channel, listener ){
 Radio.prototype.unsubscribe = function( channel, listener ){
   if( this.channelExists(channel) ) {
     this._channels[channel].unsubscribe(listener)
+  }
+  return this
+}
+Radio.prototype.peek = function( channel, listener ){
+  if( this.channelExists(channel) ) {
+    this._channels[channel].peek(listener)
   }
   return this
 }

@@ -109,6 +109,25 @@ radio.subscribe("", function listener( message ){
 radio.unsubscribe("", listener)
 ```
 
+#### peek( *String* `channel`, *Function* `listener` )
+
+Peek into a channel once and unsubscribe from it immediately.
+
+**return** `Radio` the radio instance this method was called on (`this`)
+
+`channel` the channel to peek into
+
+`listener` the listener to call on `publish()`.
+           Listeners receive a `Message` object as the only argument
+
+```js
+radio.peek("", function( message ){
+  // will execute only once, when `publish()` is called
+})
+```
+
+## Providers
+
 #### providerExists( *String* `name` )
 
 **return** `boolean` true if the provider exists
@@ -188,6 +207,20 @@ channel.subscribe(function( message ){
 
 ```js
 channel.unsubscribe(listener)
+```
+
+#### peek( *Function* `listener` )
+
+Peek into the channel once and unsubscribe from it immediately.
+
+**return** `Channel` the Channel instance this method was called on (`this`)
+
+`listener` the listener to call on `publish()`.
+           Listeners receive a `Message` object as the only argument
+```js
+radio.peek("", function( message ){
+  // will execute only once, when `publish()` is called
+})
 ```
 
 ## Message

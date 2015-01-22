@@ -27,3 +27,10 @@ Channel.prototype.unsubscribe = function( listener ){
   if( ~i ) this.splice(i, 1)
   return this
 }
+Channel.prototype.peek = function( listener ){
+  this.subscribe(function proxy(  ){
+    listener.apply(this, arguments)
+    this.unsubscribe(proxy)
+  }.bind(this))
+  return this
+}
