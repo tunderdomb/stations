@@ -31,7 +31,7 @@ var message = new stations.Message({})
 var radio = stations("name")
 ```
 
-#### name
+#### `name`
 
 **type** `String` The radio's name (optional)
 
@@ -70,7 +70,7 @@ var channel = radio.createChannel("")
 radio.deleteChannel("")
 ```
 
-#### publish( String channel, Object content )
+#### publish( *String* `channel`, *Object* `content` )
 
 **return** `Message` the message object passed to listeners
 
@@ -82,7 +82,7 @@ radio.deleteChannel("")
 var message = radio.publish("", {})
 ```
 
-#### subscribe( String channel, Function listener )
+#### subscribe( *String* `channel`, *Function* `listener` )
 
 **return** `Radio` the radio instance this method was called on (`this`)
 
@@ -97,7 +97,7 @@ radio.subscribe("", function listener( message ){
 })
 ```
 
-#### unsubscribe( String channel, Function listener )
+#### unsubscribe( *String* `channel`, *Function* `listener` )
 
 **return** `Radio` the radio instance this method was called on (`this`)
 
@@ -109,7 +109,7 @@ radio.subscribe("", function listener( message ){
 radio.unsubscribe("", listener)
 ```
 
-#### providerExists( String name )
+#### providerExists( *String* `name` )
 
 **return** `boolean` true if the provider exists
 
@@ -119,7 +119,7 @@ radio.unsubscribe("", listener)
 radio.providerExists("")
 ```
 
-#### provide( String name, Function provider )
+#### provide( *String* `name`, *Function* `provider` )
 
 **return** `undefined`
 
@@ -133,7 +133,7 @@ radio.provide("", function provider( ... ){
 })
 ```
 
-#### request( String name )
+#### request( *String* `name` )
 
 **return** `Function` the requested provider
 
@@ -157,7 +157,7 @@ Channels are array instances and you can use array methods on them.
 channel instanceOf Array === true
 ```
 
-#### publish( Object content )
+#### publish( *Object* `content` )
 
 **return** `Message` the message passed to listeners
 
@@ -167,7 +167,7 @@ channel instanceOf Array === true
 channel.publish({})
 ```
 
-#### subscribe( Function listener )
+#### subscribe( *Function* `listener` )
 
 **return** `Channel` the Channel instance this method was called on (`this`)
 
@@ -180,7 +180,7 @@ channel.subscribe(function( message ){
 })
 ```
 
-#### unsubscribe( Function listener )
+#### unsubscribe( *Function* `listener` )
 
 **return** `Channel` the Channel instance this method was called on (`this`)
 
@@ -194,7 +194,7 @@ channel.unsubscribe(listener)
 
 Messages are passed to listeners and wrap the data they carry.
 
-#### content
+#### `content`
 
 **type** `any` the content passed to `publish(...)`
 
@@ -202,7 +202,7 @@ Messages are passed to listeners and wrap the data they carry.
 message.content
 ```
 
-#### cancelled
+#### `cancelled`
 
 **type** `boolean` true if the message was cancelled
 
