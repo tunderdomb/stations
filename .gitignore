@@ -24,6 +24,8 @@ build/Release
 # Users Environment Variables
 .lock-wscript
 
+node_modules/
+
 # not code
 *.psd
 *.zip
@@ -32,4 +34,4 @@ build/Release
 mockups/
 
 # IDE
-.idea
+.idea/
