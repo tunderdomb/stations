@@ -22,6 +22,9 @@ Channel.prototype.subscribe = function( listener ){
   this.push(listener)
   return this
 }
+Channel.prototype.isSubscribed = function( listener ){
+  return !!~this.indexOf(listener)
+}
 Channel.prototype.unsubscribe = function( listener ){
   var i = this.indexOf(listener)
   if( ~i ) this.splice(i, 1)

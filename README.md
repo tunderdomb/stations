@@ -82,6 +82,10 @@ radio.deleteChannel("")
 var message = radio.publish("", {})
 ```
 
+#### isSubscribed( *String* `channel`, *Function* `listener` )
+
+**return** `Boolean` `true` if the callback is a subscriber on the channel. If the channel doesn't exist it's `false`.
+
 #### subscribe( *String* `channel`, *Function* `listener` )
 
 **return** `Radio` the radio instance this method was called on (`this`)
@@ -126,44 +130,6 @@ radio.peek("", function( message ){
 })
 ```
 
-## Providers
-
-#### providerExists( *String* `name` )
-
-**return** `boolean` true if the provider exists
-
-`name` the provider name to check
-
-```js
-radio.providerExists("")
-```
-
-#### provide( *String* `name`, *Function* `provider` )
-
-**return** `undefined`
-
-`name` the provider name
-
-`provider` the provider function to store
-
-```js
-radio.provide("", function provider( ... ){
-  // ...
-})
-```
-
-#### request( *String* `name` )
-
-**return** `Function` the requested provider
-
-`name` the provider to request
-
-```js
-var provider = channel.request("")
-provider(...)
-```
-
-
 ## Channel
 
 ```js
@@ -185,6 +151,10 @@ channel instanceOf Array === true
 ```js
 channel.publish({})
 ```
+
+#### isSubscribed( *Function* `listener` )
+
+**return** `Boolean` `true` if if the callback is a subscriber on this channel
 
 #### subscribe( *Function* `listener` )
 
