@@ -16,6 +16,9 @@ Radio.prototype.createChannel = function( channel ){
   return this._channels[channel] || (this._channels[channel] = new Channel(channel))
 }
 Radio.prototype.deleteChannel = function( channel ){
+  if( channel instanceof Channel ){
+    return delete this._channels[channel.name]
+  }
   return delete this._channels[channel]
 }
 Radio.prototype.isSubscribed = function( channel, listener ){
@@ -39,8 +42,11 @@ Radio.prototype.unsubscribe = function( channel, listener ){
   return this
 }
 Radio.prototype.peek = function( channel, listener ){
-  if( this.channelExists(channel) ) {
-    this._channels[channel].peek(listener)
-  }
+  var radio = this
+  channel = this.createChannel(channel)
+  channel.peek(function(  ){
+    listener.apply(this, arguments)
+    if( !channel.length ) radio.deleteChannel(channel)
+  })
   return this
 }
