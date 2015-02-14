@@ -25,6 +25,18 @@ Radio.prototype.isSubscribed = function( channel, listener ){
   channel = this._channels[channel]
   return channel && channel.isSubscribed(listener)
 }
+Radio.prototype.poll = function( channel ){
+  channel = this._channels[channel]
+  if( !channel ) return null
+  var args = [].slice.call(arguments, 1)
+  return channel.poll.apply(channel, args)
+}
+Radio.prototype.broadcast = function( channel ){
+  channel = this._channels[channel]
+  if( !channel ) return null
+  var args = [].slice.call(arguments, 1)
+  return channel.broadcast.apply(channel, args)
+}
 Radio.prototype.publish = function( channel, content ){
   channel = this._channels[channel]
   if( !channel ) return null

@@ -7,11 +7,30 @@ function Channel( name ){
 }
 
 Channel.prototype = []
+
+Channel.prototype.poll = function(  ){
+  var args = arguments
+  var result = null
+  this.some(function( listener ){
+    result = listener.apply(null, args)
+    return result != null
+  })
+  return result
+}
+Channel.prototype.broadcast = function(  ){
+  var args = arguments
+  var err = null
+  this.some(function( listener ){
+    err = listener.apply(null, args)
+    return err != null
+  })
+  return err || false
+}
 Channel.prototype.publish = function( content ){
-  var message = new Message(this.name, content)
-  if( this.length ) {
-    return message
+  if( !this.length ) {
+    return null
   }
+  var message = new Message(this.name, content)
   this.some(function( listener ){
     listener(message)
     return message.cancelled
@@ -31,9 +50,10 @@ Channel.prototype.unsubscribe = function( listener ){
   return this
 }
 Channel.prototype.peek = function( listener ){
+  var channel = this
   this.subscribe(function proxy(  ){
-    listener.apply(this, arguments)
-    this.unsubscribe(proxy)
-  }.bind(this))
+    listener.apply(channel, arguments)
+    channel.unsubscribe(proxy)
+  })
   return this
 }

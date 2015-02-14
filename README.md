@@ -16,10 +16,10 @@ If a message is cancelled, no other listeners will reach it.
 var stations = require("stations")
 
 // the module exports a function that returns a Radio instance
-radio = stations("")
+var radio = stations("")
 
 // constructors are exposed for inheritance
-var radio = new stations.Radio("")
+radio = new stations.Radio("")
 var channel = new stations.Channel("")
 var message = new stations.Message({})
 
@@ -68,6 +68,39 @@ var channel = radio.createChannel("")
 
 ```js
 radio.deleteChannel("")
+```
+
+#### poll( *String* `channel`, *arguments* `...` )
+
+**return** the first return value of the listener that returned anything other than `null`
+
+`channel` the channel to broadcast the message
+
+`arguments` the rest of the arguments will be the arguments of the listeners
+
+```js
+radio.subscribe("channel", function( a, b, c ){
+  return null
+})
+radio.subscribe("channel", function( a, b, c ){
+  return "anything"
+})
+var result = radio.broadcast("channel", 1, 2, 3)
+```
+
+#### broadcast( *String* `channel`, *arguments* `...` )
+
+**return** `false` if there was no error, or anything the first listener returned that wasn't `null`
+
+`channel` the channel to broadcast the message
+
+`arguments` the rest of the arguments will be the arguments of the listeners
+
+```js
+radio.subscribe("channel", function( a, b, c ){
+  // ...
+})
+var error = radio.broadcast("channel", 1, 2, 3)
 ```
 
 #### publish( *String* `channel`, *Object* `content` )
@@ -140,6 +173,37 @@ Channels are array instances and you can use array methods on them.
 
 ```js
 channel instanceOf Array === true
+```
+
+#### poll( *String* `channel`, *arguments* `...` )
+
+**return** the first return value of the listener that returned anything other than `null`
+
+`channel` the channel to broadcast the message
+
+`arguments` the rest of the arguments will be the arguments of the listeners
+
+```js
+channel.subscribe(function( a, b, c ){
+  return null
+})
+channel.subscribe(function( a, b, c ){
+  return "anything"
+})
+var result = channel.broadcast(1, 2, 3)
+```
+
+#### broadcast( *arguments* `...` )
+
+**return** `false` if there was no error, or anything the first listener returned that wasn't `null`
+
+`arguments` the rest of the arguments will be the arguments of the listeners
+
+```js
+channel.subscribe(function( a, b, c ){
+  // ...
+})
+var error = channel.broadcast(1, 2, 3)
 ```
 
 #### publish( *Object* `content` )
