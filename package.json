@@ -15,5 +15,17 @@
     "bus"
   ],
   "author": "tunderdomb",
-  "license": "MIT"
+  "license": "MIT",
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tunderdomb/stations.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tunderdomb/stations/issues"
+  }
 }
