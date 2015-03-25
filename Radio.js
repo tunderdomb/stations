@@ -4,9 +4,7 @@ module.exports = Radio
 
 function Radio( name ){
   this.name = name || "radio"
-  Object.defineProperty(this, "_channels", {
-    value: {}
-  })
+  Object.defineProperty(this, "_channels", {value: {}})
 }
 
 Radio.prototype.channelExists = function( channel ){
@@ -17,9 +15,7 @@ Radio.prototype.channel = function( name ){
 }
 Radio.prototype.createChannel = function( channel ){
   if( !this._channels ){
-    Object.defineProperty(this, "_channels", {
-      value: {}
-    })
+    Object.defineProperty(this, "_channels", {value: {}})
   }
   return this._channels[channel] || (this._channels[channel] = new Channel(channel))
 }
@@ -40,42 +36,41 @@ Radio.prototype.hasSubscribers = function( channel ){
 }
 Radio.prototype.poll = function( channel ){
   if( !this._channels ) return null
-  channel = this._channels[channel]
-  if( !channel ) return null
-  var args = [].slice.call(arguments, 1)
-  return channel.poll.apply(channel, args)
+  if( this.channelExists(channel) ) {
+    var args = [].slice.call(arguments, 1)
+    channel = this.channel(channel)
+    return channel.poll.apply(channel, args)
+  }
+  return null
 }
 Radio.prototype.broadcast = function( channel ){
   if( !this._channels ) return null
-  channel = this._channels[channel]
-  if( !channel ) return null
-  var args = [].slice.call(arguments, 1)
-  return channel.broadcast.apply(channel, args)
+  if( this.channelExists(channel) ) {
+    var args = [].slice.call(arguments, 1)
+    channel = this.channel(channel)
+    channel.broadcast.apply(channel, args)
+  }
+  return null
 }
 Radio.prototype.publish = function( channel, content ){
   if( !this._channels ) return null
-  channel = this._channels[channel]
-  if( !channel ) return null
-  return channel.publish(content)
+  if( this.channelExists(channel) ) {
+    return this.channel(channel).publish(content)
+  }
+  return null
 }
 Radio.prototype.subscribe = function( channel, listener ){
-  channel = this.createChannel(this, channel)
-  channel.subscribe(listener)
+  this.createChannel(channel).subscribe(listener)
   return this
 }
 Radio.prototype.unsubscribe = function( channel, listener ){
   if( this.channelExists(channel) ) {
-    this._channels[channel].unsubscribe(listener)
+    this.channel(channel).unsubscribe(listener)
   }
   return this
 }
 Radio.prototype.peek = function( channel, listener ){
-  var radio = this
-  channel = this.createChannel(channel)
-  channel.peek(function(  ){
-    listener.apply(this, arguments)
-    if( !channel.length ) radio.deleteChannel(channel)
-  })
+  this.createChannel(channel).peek(listener)
   return this
 }
 Radio.prototype.emptyChannels = function(  ){

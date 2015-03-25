@@ -50,15 +50,34 @@ Channel.prototype.hasSubscribers = function(  ){
 }
 Channel.prototype.unsubscribe = function( listener ){
   var i = this.indexOf(listener)
-  if( ~i ) this.splice(i, 1)
+  if( ~i ) {
+    this.splice(i, 1)
+  }
+  i = this._proxied.indexOf(listener)
+  if( ~i ){
+    this._proxied.splice(i, 1)
+    var l = this.length
+    while( l-- ){
+      if( this[l].listener === listener ){
+        this.splice(l, 1)
+        return this
+      }
+    }
+  }
   return this
 }
 Channel.prototype.peek = function( listener ){
   var channel = this
-  this.subscribe(function proxy(  ){
+  if( !this._proxied ) {
+    Object.defineProperty(this, "_proxied", {value: []})
+  }
+  function proxy(  ){
     listener.apply(channel, arguments)
     channel.unsubscribe(proxy)
-  })
+  }
+  proxy.listener = listener
+  this._proxied.push(listener)
+  this.subscribe(proxy)
   return this
 }
 Channel.prototype.empty = function(){
