@@ -7,6 +7,7 @@ function Channel( name ){
 }
 
 Channel.prototype = []
+Channel.prototype.constructor = Channel
 
 Channel.prototype.poll = function(  ){
   var args = arguments
@@ -44,6 +45,9 @@ Channel.prototype.subscribe = function( listener ){
 Channel.prototype.isSubscribed = function( listener ){
   return !!~this.indexOf(listener)
 }
+Channel.prototype.hasSubscribers = function(  ){
+  return this.length > 0
+}
 Channel.prototype.unsubscribe = function( listener ){
   var i = this.indexOf(listener)
   if( ~i ) this.splice(i, 1)
@@ -57,3 +61,8 @@ Channel.prototype.peek = function( listener ){
   })
   return this
 }
+Channel.prototype.empty = function(){
+  this.splice(0)
+  return this
+}
+

@@ -12,6 +12,9 @@ function Radio( name ){
 Radio.prototype.channelExists = function( channel ){
   return this._channels.hasOwnProperty(channel)
 }
+Radio.prototype.channel = function( name ){
+  return this._channels[name]
+}
 Radio.prototype.createChannel = function( channel ){
   return this._channels[channel] || (this._channels[channel] = new Channel(channel))
 }
@@ -24,6 +27,9 @@ Radio.prototype.deleteChannel = function( channel ){
 Radio.prototype.isSubscribed = function( channel, listener ){
   channel = this._channels[channel]
   return channel && channel.isSubscribed(listener)
+}
+Radio.prototype.hasSubscribers = function( channel ){
+  return this.channelExists(channel) && this.channel(channel).hasSubscribers()
 }
 Radio.prototype.poll = function( channel ){
   channel = this._channels[channel]
@@ -61,4 +67,12 @@ Radio.prototype.peek = function( channel, listener ){
     if( !channel.length ) radio.deleteChannel(channel)
   })
   return this
+}
+Radio.prototype.emptyChannels = function(  ){
+  for( var name in this._channels ){
+    if( this._channels.hasOwnProperty(name) && this.channelExists(name) ){
+      this.channel(name).empty()
+      this.deleteChannel(name)
+    }
+  }
 }
