@@ -1,18 +1,19 @@
 {
   "name": "stations",
-  "version": "0.5.2",
-  "description": "Pub/sub event bus",
+  "version": "1.0.0",
+  "description": "Pub/sub",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/mocha/bin/mocha",
+    "docs": "documentation build Radio.js -f md -o docs/Radio.md && documentation build Channel.js -f md -o docs/Channel.md"
   },
   "keywords": [
     "pub/sub",
     "radio",
     "channels",
+    "message",
     "events",
-    "event",
-    "bus"
+    "event"
   ],
   "author": "tunderdomb",
   "license": "MIT",
@@ -20,7 +21,11 @@
     "doc": "docs"
   },
   "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "documentation": "^4.0.0-beta",
+    "mocha": "^2.4.2"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/tunderdomb/stations.git"
