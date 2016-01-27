@@ -2,82 +2,145 @@ var Channel = require("./Channel")
 
 module.exports = Radio
 
-function Radio( name ){
-  this.name = name || "radio"
-  Object.defineProperty(this, "_channels", {value: {}})
+/**
+ * @constructor Radio
+ * @member {Array} channels
+ * */
+function Radio() {
+  this.channels = []
 }
 
-Radio.prototype.channelExists = function( channel ){
-  return !!this._channels && this._channels.hasOwnProperty(channel)
+/**
+ * Create a channel if it doesn't exist already
+ * and return the channel.
+ *
+ * @param {String} channel
+ * @return {Channel}
+ * */
+Radio.prototype.channel = function(channel) {
+  return this.channels[channel]
+      || (this.channels[channel] = new Channel(channel))
 }
-Radio.prototype.channel = function( name ){
-  return !!this._channels ? this._channels[name] : null
+
+/**
+ * Check if a channel exists.
+ *
+ * @param {Channel|String} channel
+ * @return {boolean}
+ * */
+Radio.prototype.channelExists = function(channel) {
+  return !!channel && (typeof channel == "string"
+          ? this.channels.hasOwnProperty(channel)
+          : this.channels.hasOwnProperty(channel.name))
 }
-Radio.prototype.createChannel = function( channel ){
-  if( !this._channels ){
-    Object.defineProperty(this, "_channels", {value: {}})
+
+/**
+ * Delete a channel.
+ *
+ * @param {Channel|String} channel
+ * @return {boolean}
+ * */
+Radio.prototype.deleteChannel = function(channel) {
+  if (channel instanceof Channel) {
+    return delete this.channels[channel.name]
   }
-  return this._channels[channel] || (this._channels[channel] = new Channel(channel))
+  return delete this.channels[channel]
 }
-Radio.prototype.deleteChannel = function( channel ){
-  if( !this._channels ) return false
-  if( channel instanceof Channel ){
-    return delete this._channels[channel.name]
-  }
-  return delete this._channels[channel]
-}
-Radio.prototype.isSubscribed = function( channel, listener ){
-  if( !this._channels ) return false
-  channel = this._channels[channel]
-  return channel && channel.isSubscribed(listener)
-}
-Radio.prototype.hasSubscribers = function( channel ){
+
+/**
+ * Check if a channel has any subscribers.
+ * If the channel doesn't exists it's `false`.
+ *
+ * @param {Channel|String} channel
+ * @return {boolean}
+ * */
+Radio.prototype.hasSubscribers = function(channel) {
   return this.channelExists(channel) && this.channel(channel).hasSubscribers()
 }
-Radio.prototype.poll = function( channel ){
-  if( !this._channels ) return null
-  if( this.channelExists(channel) ) {
-    var args = [].slice.call(arguments, 1)
+
+/**
+ * Check if a listener is subscribed to a channel.
+ * If the channel doesn't exists it's `false`.
+ *
+ * @param {Channel|String} channel
+ * @param {Function} listener
+ * @return {boolean}
+ * */
+Radio.prototype.isSubscribed = function(channel, listener) {
+  return this.channelExists(channel) && this.channel(channel).isSubscribed(listener)
+}
+
+/**
+ * Send arguments on a channel.
+ * If the channel doesn't exists nothing happens.
+ *
+ * @alias broadcast
+ * @param {Channel|String} channel
+ * @return {*}
+ * */
+Radio.prototype.publish = function(channel) {
+  if (this.channelExists(channel)) {
     channel = this.channel(channel)
-    return channel.poll.apply(channel, args)
-  }
-  return null
-}
-Radio.prototype.broadcast = function( channel ){
-  if( !this._channels ) return null
-  if( this.channelExists(channel) ) {
     var args = [].slice.call(arguments, 1)
-    channel = this.channel(channel)
-    channel.broadcast.apply(channel, args)
+    return channel.broadcast.apply(channel, args)
   }
-  return null
+  return false
 }
-Radio.prototype.publish = function( channel, content ){
-  if( !this._channels ) return null
-  if( this.channelExists(channel) ) {
-    return this.channel(channel).publish(content)
-  }
-  return null
-}
-Radio.prototype.subscribe = function( channel, listener ){
-  this.createChannel(channel).subscribe(listener)
+Radio.prototype.broadcast = Radio.prototype.publish
+
+/**
+ * Subscribe to a channel with a listener.
+ * It also creates the channel if it doesn't exists yet.
+ *
+ * @param {Channel|String} channel
+ * @param {Function} listener
+ * @return {Radio} this
+ * */
+Radio.prototype.subscribe = function(channel, listener) {
+  this.channel(channel).subscribe(listener)
   return this
 }
-Radio.prototype.unsubscribe = function( channel, listener ){
-  if( this.channelExists(channel) ) {
+
+/**
+ * Unsubscribe a listener from a channel.
+ * If the channel doesn't exists nothing happens.
+ *
+ * @param {Channel|String} channel
+ * @param {Function} listener
+ * @return {Radio} this
+ * */
+Radio.prototype.unsubscribe = function(channel, listener) {
+  if (this.channelExists(channel)) {
     this.channel(channel).unsubscribe(listener)
   }
   return this
 }
-Radio.prototype.peek = function( channel, listener ){
-  this.createChannel(channel).peek(listener)
+
+/**
+ * Subscribe a listener to a channel
+ * that unsubscribes after the first broadcast it receives.
+ * It also creates the channel if it doesn't exists yet.
+ *
+ * @param {Channel|String} channel
+ * @param {Function} listener
+ * @return {Radio} this
+ * */
+Radio.prototype.peek = function(channel, listener) {
+  this.channel(channel).peek(listener)
   return this
 }
-Radio.prototype.emptyChannels = function(  ){
-  for( var name in this._channels ){
-    if( this._channels.hasOwnProperty(name) && this.channelExists(name) ){
-      this.channel(name).empty()
-      this.deleteChannel(name)
-    }
+
+/**
+ * Empty a channel removing every subscriber it holds,
+ * but not deleting the channel itself.
+ * If the channel doesn't exists nothing happens.
+ *
+ * @param {Channel|String} channel
+ * @return {Radio} this
+ * */
+Radio.prototype.emptyChannel = function(channel) {
+  if (this.channelExists(channel)) {
+    this.channel(channel).empty()
   }
+  return this
 }

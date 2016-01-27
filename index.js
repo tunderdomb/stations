@@ -1,16 +1,5 @@
-var Message = require("./Message")
-var Channel = require("./Channel")
 var Radio = require("./Radio")
+var Channel = require("./Channel")
 
-/**
- * @return Radio
- * */
-function stations( name ){
-  return new Radio(name)
-}
-
-stations.Message = Message
-stations.Channel = Channel
-stations.Radio = Radio
-
-module.exports = stations
+module.exports = Radio
+module.exports.Channel = Channel
